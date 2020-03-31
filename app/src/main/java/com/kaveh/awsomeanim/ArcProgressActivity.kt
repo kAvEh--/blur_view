@@ -3,8 +3,10 @@ package com.kaveh.awsomeanim
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.VectorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.widget.SeekBar
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
@@ -14,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_arc_progress.*
 
 class ArcProgressActivity : AppCompatActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_arc_progress)
@@ -29,7 +32,7 @@ class ArcProgressActivity : AppCompatActivity() {
 //        arc.setIndicatorBitmap(myLogo)
         ((findViewById<SeekBar>(R.id.seek))).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                arc.updateProgress(i / 100F)
+                arc.progress = i / 100F
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}

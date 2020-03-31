@@ -19,10 +19,12 @@ class ArcProgressView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private var oval = RectF()
-    private val mPaint = Paint()
+    private val mPaintBg = Paint()
+    private val mPaintProgress = Paint()
+    private val mPaintIndicator = Paint()
     private var strokeWidth = 40F
     private var mPath = Path()
-    private var mProgress = .25F
+    private var mProgress = 0F
     private lateinit var p0: Pair<Float, Float>
     private lateinit var p1: Pair<Float, Float>
     private lateinit var p2: Pair<Float, Float>
@@ -33,20 +35,26 @@ class ArcProgressView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        p0 = Pair(0F, height.toFloat() - height / 4f)
+        p0 = Pair(indicatorRadius * 2, height.toFloat() - height / 4f)
         p1 = Pair(width / 4f, height / 2f - height / 4f)
         p2 = Pair(width / 2f + width / 4f, height / 2f - height / 4f)
-        p3 = Pair(width.toFloat(), height.toFloat() - height / 4f)
+        p3 = Pair(width.toFloat() - indicatorRadius * 2, height.toFloat() - height / 4f)
         createObjects()
     }
 
-    fun updateProgress(progress: Float) {
-        if (progress < 0 || progress > 1) {
-            return
+    /**
+     * set progress to `progress`.
+     *
+     * @param progress Should be 0 ~ 1. Default to be 0.
+     */
+    var progress: Float
+        get() = mProgress
+        set(progress) {
+            if (mProgress != progress && (progress >= 0 || progress <= 1)) {
+                mProgress = progress
+                invalidate()
+            }
         }
-        mProgress = progress
-        invalidate()
-    }
 
     fun setIndicatorBitmap(bitmap: Bitmap) {
         mBitmap = bitmap
@@ -57,12 +65,22 @@ class ArcProgressView @JvmOverloads constructor(
         oval.top = strokeWidth
         oval.right = width.toFloat() - strokeWidth
         oval.bottom = height * 2F - strokeWidth
-        mPaint.style = Paint.Style.STROKE
-        mPaint.strokeWidth = 15.0F
-        mPaint.strokeCap = Paint.Cap.ROUND
-        mPaint.isAntiAlias = true
-        mPaint.color = Color.parseColor("#131415")
-        mPaint.setShadowLayer(10.0f, 0.0f, -8.0f, R.color.colorPrimaryDark)
+        mPaintBg.style = Paint.Style.STROKE
+        mPaintBg.strokeWidth = 15.0F
+        mPaintBg.strokeCap = Paint.Cap.ROUND
+        mPaintBg.isAntiAlias = true
+        mPaintBg.color = Color.parseColor("#c1c1c1")
+        mPaintBg.setShadowLayer(10.0f, 0.0f, -8.0f, R.color.colorPrimaryDark)
+        mPaintProgress.style = Paint.Style.STROKE
+        mPaintProgress.strokeWidth = 15.0F
+        mPaintProgress.strokeCap = Paint.Cap.ROUND
+        mPaintProgress.isAntiAlias = true
+        mPaintProgress.color = Color.parseColor("#FF14C5")
+        mPaintIndicator.style = Paint.Style.FILL
+        mPaintIndicator.strokeCap = Paint.Cap.ROUND
+        mPaintIndicator.isAntiAlias = true
+        mPaintIndicator.color = Color.parseColor("#FF14C5")
+        mPaintIndicator.setShadowLayer(indicatorRadius + 5F, 0.0f, 0.0f, R.color.black)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -71,17 +89,15 @@ class ArcProgressView @JvmOverloads constructor(
                 p2.first, p2.second,
                 p3.first, p3.second
         )
-        mPaint.color = Color.parseColor("#c1c1c1")
-        canvas.drawPath(mPath, mPaint)
+        canvas.drawPath(mPath, mPaintBg)
         val tmp = getPoint(mProgress)
         val path2 = getSubPath(mPath, 0F, mProgress)
-        mPaint.color = Color.parseColor("#FF14C5")
-        canvas.drawPath(path2, mPaint)
+        canvas.drawPath(path2, mPaintProgress)
 
         if (::mBitmap.isInitialized)
-            canvas.drawBitmap(mBitmap, tmp.first - mBitmap.width / 2, tmp.second - mBitmap.height / 2, mPaint)
+            canvas.drawBitmap(mBitmap, tmp.first - mBitmap.width / 2, tmp.second - mBitmap.height / 2, mPaintIndicator)
         else
-            canvas.drawCircle(tmp.first, tmp.second, indicatorRadius, mPaint)
+            canvas.drawCircle(tmp.first, tmp.second, indicatorRadius, mPaintIndicator)
     }
 
     private fun getSubPath(path: Path, start: Float, end: Float): Path {
@@ -93,14 +109,22 @@ class ArcProgressView @JvmOverloads constructor(
 
     private fun getPoint(progress: Float): Pair<Float, Float> {
         val mPoint: Pair<Float, Float>
-        val x = (1 - progress).toDouble().pow(3.0) * p0.first +
+        var x = (1 - progress).toDouble().pow(3.0) * p0.first +
                 3 * (1 - progress).toDouble().pow(2.0) * progress * p1.first +
                 3 * (1 - progress) * progress.toDouble().pow(2.0) * p2.first +
                 progress.toDouble().pow(3.0) * p3.first
-        val y = (1 - progress).toDouble().pow(3.0) * p0.second +
+        var y = (1 - progress).toDouble().pow(3.0) * p0.second +
                 3 * (1 - progress).toDouble().pow(2.0) * progress * p1.second +
                 3 * (1 - progress) * progress.toDouble().pow(2.0) * p2.second +
                 progress.toDouble().pow(3.0) * p3.second
+        if (x < p0.first) {
+            x = p0.first.toDouble()
+        } else if (x > p3.first) {
+            x = p3.first.toDouble()
+        }
+        if (y > p0.second) {
+            y = p0.second.toDouble()
+        }
         mPoint = Pair(x.toFloat(), y.toFloat())
         return mPoint
     }
@@ -124,7 +148,7 @@ class ArcProgressView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {
                 //TODO must improve tracking of indicator
                 if (isTouched) {
-                    updateProgress(event.x / width)
+                    progress = event.x / width
                 }
             }
             MotionEvent.ACTION_UP -> {
