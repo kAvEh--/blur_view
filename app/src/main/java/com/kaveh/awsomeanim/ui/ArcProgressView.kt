@@ -3,20 +3,20 @@ package com.kaveh.awsomeanim.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import androidx.annotation.RequiresApi
 import com.kaveh.awsomeanim.R
-import kotlinx.android.synthetic.main.content_arc_progress.view.*
 import kotlin.math.pow
 import kotlin.math.sqrt
-
 
 class ArcProgressView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+
+    interface OnCustomEventListener {
+        fun onChanged(progress: Float)
+    }
 
     private var oval = RectF()
     private val mPaintBg = Paint()
@@ -32,6 +32,7 @@ class ArcProgressView @JvmOverloads constructor(
     private var isTouched = false
     private val indicatorRadius = 30F
     private lateinit var mBitmap: Bitmap
+    private lateinit var mListener: OnCustomEventListener
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -50,14 +51,22 @@ class ArcProgressView @JvmOverloads constructor(
     var progress: Float
         get() = mProgress
         set(progress) {
+            println(">>>>>>>>>>>>>>>>>>>>>>>>>>::::$progress")
             if (mProgress != progress && (progress >= 0 || progress <= 1)) {
                 mProgress = progress
+                if (::mListener.isInitialized) {
+                    mListener.onChanged(mProgress)
+                }
                 invalidate()
             }
         }
 
     fun setIndicatorBitmap(bitmap: Bitmap) {
         mBitmap = bitmap
+    }
+
+    fun setOnChangeListener(listener: OnCustomEventListener) {
+        mListener = listener
     }
 
     private fun createObjects() {
@@ -148,7 +157,12 @@ class ArcProgressView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {
                 //TODO must improve tracking of indicator
                 if (isTouched) {
-                    progress = event.x / width
+                    progress = if (event.x < 0)
+                        0F
+                    else if (event.x > width)
+                        1F
+                    else
+                        event.x / width
                 }
             }
             MotionEvent.ACTION_UP -> {

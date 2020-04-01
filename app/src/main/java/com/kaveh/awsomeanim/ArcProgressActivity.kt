@@ -28,6 +28,11 @@ class ArcProgressActivity : AppCompatActivity() {
         }
 
         val arc = findViewById<ArcProgressView>(R.id.arc_progress)
+        arc.setOnChangeListener(object : ArcProgressView.OnCustomEventListener {
+            override fun onChanged(progress: Float) {
+                println("&&&&&&&&&&&&&&& ::: $progress")
+            }
+        })
         val myLogo = (ResourcesCompat.getDrawable(this.resources, R.drawable.ic_home_black_24dp, null) as VectorDrawable).toBitmap()
 //        arc.setIndicatorBitmap(myLogo)
         ((findViewById<SeekBar>(R.id.seek))).setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
