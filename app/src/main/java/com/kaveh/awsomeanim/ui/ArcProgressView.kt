@@ -29,6 +29,7 @@ class ArcProgressView @JvmOverloads constructor(
     private val mClickEffectPaint = Paint()
     private var mEffectRadius = 0F
     private var strokeWidth = 40F
+    private var mIndicatorRadius = 30F
     private var mPath = Path()
     private var mProgress = 0F
     private lateinit var p0: Pair<Float, Float>
@@ -37,23 +38,26 @@ class ArcProgressView @JvmOverloads constructor(
     private var p3: Pair<Float, Float> = Pair(width.toFloat(), height.toFloat() - height / 4f)
     private var isTouched = false
     private var isClickEffectEnabled = true
-    private val indicatorRadius = 30F
     private lateinit var mBitmap: Bitmap
     private lateinit var mListener: OnCustomEventListener
+    private var mBackgroundColor = Color.parseColor("#c1c1c1")
+    private var mForegroundColor = Color.parseColor("#6200EE")
+    private var mIndicatorColor = Color.parseColor("#03DAC5")
+    private var mEffectColor = Color.parseColor("#F43636")
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        p0 = Pair(indicatorRadius * 2, height.toFloat() - height / 4f)
+        p0 = Pair(mIndicatorRadius * 2, height.toFloat() - height / 4f)
         p1 = Pair(width / 4f, height / 2f - height / 4f)
         p2 = Pair(width / 2f + width / 4f, height / 2f - height / 4f)
-        p3 = Pair(width.toFloat() - indicatorRadius * 2, height.toFloat() - height / 4f)
+        p3 = Pair(width.toFloat() - mIndicatorRadius * 2, height.toFloat() - height / 4f)
         createObjects()
     }
 
     /**
-     * set progress to `progress`.
+     * set progress.
      *
-     * @param progress Should be 0 ~ 1. Default to be 0.
+     * @param progress Should be 0 ~ 1.
      */
     var progress: Float
         get() = mProgress
@@ -67,6 +71,12 @@ class ArcProgressView @JvmOverloads constructor(
             }
         }
 
+    var clickEffectEnabled: Boolean
+        get() = isClickEffectEnabled
+        set(value) {
+            isClickEffectEnabled = value
+        }
+
     var effectRadius: Float
         get() = mEffectRadius
         set(radius) {
@@ -74,6 +84,46 @@ class ArcProgressView @JvmOverloads constructor(
                 mEffectRadius = radius
                 invalidate()
             }
+        }
+
+    var barRadius: Float
+        get() = strokeWidth
+        set(value) {
+            strokeWidth = value
+        }
+
+    var indicatorRadius: Float
+        get() = mIndicatorRadius
+        set(value) {
+            mIndicatorRadius = value
+        }
+
+    var bgColor: Int
+        get() = mBackgroundColor
+        set(color) {
+            mBackgroundColor = color
+            invalidate()
+        }
+
+    var accentColor: Int
+        get() = mForegroundColor
+        set(color) {
+            mForegroundColor = color
+            invalidate()
+        }
+
+    var indicatorColor: Int
+        get() = mIndicatorColor
+        set(color) {
+            mIndicatorColor = color
+            invalidate()
+        }
+
+    var effectColor: Int
+        get() = mEffectColor
+        set(color) {
+            mEffectColor = color
+            invalidate()
         }
 
     fun setIndicatorBitmap(bitmap: Bitmap) {
@@ -93,23 +143,23 @@ class ArcProgressView @JvmOverloads constructor(
         mPaintBg.strokeWidth = 15.0F
         mPaintBg.strokeCap = Paint.Cap.ROUND
         mPaintBg.isAntiAlias = true
-        mPaintBg.color = Color.parseColor("#c1c1c1")
+        mPaintBg.color = mBackgroundColor
         mPaintBg.setShadowLayer(10.0f, 0.0f, -8.0f, R.color.colorPrimaryDark)
         mPaintProgress.style = Paint.Style.STROKE
         mPaintProgress.strokeWidth = 15.0F
         mPaintProgress.strokeCap = Paint.Cap.ROUND
         mPaintProgress.isAntiAlias = true
-        mPaintProgress.color = Color.parseColor("#FF14C5")
+        mPaintProgress.color = mForegroundColor
         mPaintIndicator.style = Paint.Style.FILL
         mPaintIndicator.strokeCap = Paint.Cap.ROUND
         mPaintIndicator.isAntiAlias = true
-        mPaintIndicator.color = Color.parseColor("#FF14C5")
-        mPaintIndicator.setShadowLayer(indicatorRadius + 5F, 0.0f, 0.0f, R.color.black)
+        mPaintIndicator.color = mIndicatorColor
+        mPaintIndicator.setShadowLayer(mIndicatorRadius + 5F, 0.0f, 0.0f, R.color.black)
         mClickEffectPaint.style = Paint.Style.STROKE
         mClickEffectPaint.strokeWidth = 5.0F
         mClickEffectPaint.strokeCap = Paint.Cap.ROUND
         mClickEffectPaint.isAntiAlias = true
-        mClickEffectPaint.color = Color.parseColor("#FF14C5")
+        mClickEffectPaint.color = mEffectColor
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -126,7 +176,7 @@ class ArcProgressView @JvmOverloads constructor(
         if (::mBitmap.isInitialized)
             canvas.drawBitmap(mBitmap, tmp.first - mBitmap.width / 2, tmp.second - mBitmap.height / 2, mPaintIndicator)
         else
-            canvas.drawCircle(tmp.first, tmp.second, indicatorRadius, mPaintIndicator)
+            canvas.drawCircle(tmp.first, tmp.second, mIndicatorRadius, mPaintIndicator)
 
         if (isClickEffectEnabled) {
             canvas.drawCircle(tmp.first, tmp.second, mEffectRadius, mClickEffectPaint)
@@ -164,7 +214,7 @@ class ArcProgressView @JvmOverloads constructor(
 
     private fun isTouchedNear(x: Float, y: Float) {
         val tmp = getPoint(mProgress)
-        if (sqrt(((tmp.first - x).pow(2) + (tmp.second - y).pow(2)).toDouble()) < indicatorRadius + 5) {
+        if (sqrt(((tmp.first - x).pow(2) + (tmp.second - y).pow(2)).toDouble()) < mIndicatorRadius + 5) {
             isTouched = true
         }
     }
@@ -183,12 +233,11 @@ class ArcProgressView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {
                 //TODO must improve tracking of indicator
                 if (isTouched) {
-                    progress = if (event.x < 0)
-                        0F
-                    else if (event.x > width)
-                        1F
-                    else
-                        event.x / width
+                    progress = when {
+                        event.x < 0 -> 0F
+                        event.x > width -> 1F
+                        else -> event.x / width
+                    }
                 }
             }
             MotionEvent.ACTION_UP -> {
@@ -204,10 +253,10 @@ class ArcProgressView @JvmOverloads constructor(
 
     private fun startAnimation() {
         val clickEffectAnim = ObjectAnimator.ofFloat(
-                this, "effectRadius", 0F, indicatorRadius + 15)
+                this, "effectRadius", mIndicatorRadius, mIndicatorRadius + 20)
         clickEffectAnim.repeatCount = 1
         clickEffectAnim.repeatMode = ValueAnimator.REVERSE
-        clickEffectAnim.duration = 400
+        clickEffectAnim.duration = 150
         clickEffectAnim.interpolator = LinearInterpolator()
         clickEffectAnim.start()
         clickEffectAnim.addListener(object : Animator.AnimatorListener {
