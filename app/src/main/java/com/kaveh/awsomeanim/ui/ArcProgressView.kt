@@ -1,11 +1,15 @@
 package com.kaveh.awsomeanim.ui
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import com.kaveh.awsomeanim.R
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -22,6 +26,8 @@ class ArcProgressView @JvmOverloads constructor(
     private val mPaintBg = Paint()
     private val mPaintProgress = Paint()
     private val mPaintIndicator = Paint()
+    private val mClickEffectPaint = Paint()
+    private var mEffectRadius = 0F
     private var strokeWidth = 40F
     private var mPath = Path()
     private var mProgress = 0F
@@ -30,6 +36,7 @@ class ArcProgressView @JvmOverloads constructor(
     private lateinit var p2: Pair<Float, Float>
     private var p3: Pair<Float, Float> = Pair(width.toFloat(), height.toFloat() - height / 4f)
     private var isTouched = false
+    private var isClickEffectEnabled = true
     private val indicatorRadius = 30F
     private lateinit var mBitmap: Bitmap
     private lateinit var mListener: OnCustomEventListener
@@ -51,12 +58,20 @@ class ArcProgressView @JvmOverloads constructor(
     var progress: Float
         get() = mProgress
         set(progress) {
-            println(">>>>>>>>>>>>>>>>>>>>>>>>>>::::$progress")
             if (mProgress != progress && (progress >= 0 || progress <= 1)) {
                 mProgress = progress
                 if (::mListener.isInitialized) {
                     mListener.onChanged(mProgress)
                 }
+                invalidate()
+            }
+        }
+
+    var effectRadius: Float
+        get() = mEffectRadius
+        set(radius) {
+            if (mEffectRadius != radius) {
+                mEffectRadius = radius
                 invalidate()
             }
         }
@@ -90,6 +105,11 @@ class ArcProgressView @JvmOverloads constructor(
         mPaintIndicator.isAntiAlias = true
         mPaintIndicator.color = Color.parseColor("#FF14C5")
         mPaintIndicator.setShadowLayer(indicatorRadius + 5F, 0.0f, 0.0f, R.color.black)
+        mClickEffectPaint.style = Paint.Style.STROKE
+        mClickEffectPaint.strokeWidth = 5.0F
+        mClickEffectPaint.strokeCap = Paint.Cap.ROUND
+        mClickEffectPaint.isAntiAlias = true
+        mClickEffectPaint.color = Color.parseColor("#FF14C5")
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -107,6 +127,10 @@ class ArcProgressView @JvmOverloads constructor(
             canvas.drawBitmap(mBitmap, tmp.first - mBitmap.width / 2, tmp.second - mBitmap.height / 2, mPaintIndicator)
         else
             canvas.drawCircle(tmp.first, tmp.second, indicatorRadius, mPaintIndicator)
+
+        if (isClickEffectEnabled) {
+            canvas.drawCircle(tmp.first, tmp.second, mEffectRadius, mClickEffectPaint)
+        }
     }
 
     private fun getSubPath(path: Path, start: Float, end: Float): Path {
@@ -150,6 +174,8 @@ class ArcProgressView @JvmOverloads constructor(
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 isTouchedNear(event.x, event.y)
+                if (isClickEffectEnabled)
+                    startAnimation()
                 return true
             }
             MotionEvent.ACTION_POINTER_DOWN -> {
@@ -174,5 +200,31 @@ class ArcProgressView @JvmOverloads constructor(
             }
         }
         return super.onTouchEvent(event)
+    }
+
+    private fun startAnimation() {
+        val clickEffectAnim = ObjectAnimator.ofFloat(
+                this, "effectRadius", 0F, indicatorRadius + 15)
+        clickEffectAnim.repeatCount = 1
+        clickEffectAnim.repeatMode = ValueAnimator.REVERSE
+        clickEffectAnim.duration = 400
+        clickEffectAnim.interpolator = LinearInterpolator()
+        clickEffectAnim.start()
+        clickEffectAnim.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                mEffectRadius = 0f
+                clickEffectAnim.removeAllListeners()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+        })
     }
 }

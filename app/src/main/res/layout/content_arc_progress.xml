@@ -5,13 +5,6 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <SeekBar
-        android:id="@+id/seek"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:layout_constraintTop_toBottomOf="@id/arc_progress" />
-
     <com.kaveh.awsomeanim.ui.ArcProgressView
         android:id="@+id/arc_progress"
         android:layout_width="0dp"
