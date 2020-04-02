@@ -18,6 +18,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class CustomNavigationView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : BottomNavigationView(context, attrs, defStyleAttr) {
+    enum class AnimationType {
+        Point, Trail
+    }
+
     private val mPaint = Paint()
     private val mLinePaint = Paint()
     private lateinit var mPoint: Pair<Float, Float>
@@ -27,11 +31,15 @@ class CustomNavigationView @JvmOverloads constructor(
     private var isLineAnimationRun = false
     private var mIndicatorRadius = 10F
     private var mIndicatorColor = Color.parseColor("#03DAC5")
+    private var mAnimationTye: AnimationType = AnimationType.Point
 
     init {
         this.setOnNavigationItemSelectedListener { item ->
             if (::mListener.isInitialized) mListener.onNavigationItemSelected(item)
-            moveIndicatorXType2((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
+            when (mAnimationTye) {
+                AnimationType.Point -> moveIndicatorX((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
+                AnimationType.Trail -> moveIndicatorXType2((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
+            }
             true
         }
         isListenerBound = true
@@ -103,7 +111,13 @@ class CustomNavigationView @JvmOverloads constructor(
         })
     }
 
-    var indicatorLocationX: Float
+    var animationType: AnimationType
+        get() = mAnimationTye
+        set(type) {
+            mAnimationTye = type
+        }
+
+    private var indicatorLocationX: Float
         get() = mPoint.first
         set(location) {
             if (mPoint.first != location) {
@@ -112,7 +126,7 @@ class CustomNavigationView @JvmOverloads constructor(
             }
         }
 
-    var indicatorOldLocationX: Float
+    private var indicatorOldLocationX: Float
         get() = mOldPoint.first
         set(location) {
             if (mOldPoint.first != location) {
