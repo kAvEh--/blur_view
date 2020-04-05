@@ -1,8 +1,11 @@
 package com.kaveh.awsomeanim
 
+import android.graphics.drawable.Animatable2
 import android.os.Bundle
+import android.view.Menu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -31,11 +34,18 @@ class NavigationActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView1.setupWithNavController(navController)
         navView1.animationType = CustomNavigationView.AnimationType.Fall
+//        navView1.menu.startAnimations()
 //        navView2.animationType = CustomNavigationView.AnimationType.Trail
 //        navView2.setOnNavigationItemSelectedListener { item ->
 //            when (item.itemId) {
 //            }
 //            true
 //        }
+    }
+
+    private fun Menu.startAnimations() {
+        (0 until size()).map { get(it).icon }
+                .filterIsInstance<Animatable2>()
+                .forEach { it.start() }
     }
 }

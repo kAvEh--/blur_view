@@ -1,6 +1,7 @@
 package com.kaveh.awsomeanim.ui
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
@@ -10,9 +11,9 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import androidx.core.view.iterator
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
 
 
 class CustomNavigationView @JvmOverloads constructor(
@@ -32,6 +33,7 @@ class CustomNavigationView @JvmOverloads constructor(
     private var mIndicatorRadius = 6F
     private var mIndicatorColor = Color.parseColor("#03DAC5")
     private var mAnimationTye: AnimationType = AnimationType.Point
+    private var mIndicatorHeight = 0F
 
     init {
         this.setOnNavigationItemSelectedListener { item ->
@@ -58,7 +60,8 @@ class CustomNavigationView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        mPoint = Pair((2 * findSelectedItem(this.selectedItemId) + 1) * (width / (this.menu.size() * 2F)), height * .7F)
+        mIndicatorHeight = height * .68F
+        mPoint = Pair((2 * findSelectedItem(this.selectedItemId) + 1) * (width / (this.menu.size() * 2F)), mIndicatorHeight)
         mOldPoint = mPoint
     }
 
@@ -101,28 +104,20 @@ class CustomNavigationView @JvmOverloads constructor(
     }
 
     private fun moveIndicatorXType3(location: Float) {
-        val clickEffectAnim = ObjectAnimator.ofFloat(
-                this, "indicatorLocationY", mPoint.second, height + 10F)
-        clickEffectAnim.duration = 150
-        clickEffectAnim.repeatCount = 1
-        clickEffectAnim.repeatMode = ValueAnimator.REVERSE
-        clickEffectAnim.interpolator = BounceInterpolator()
-        clickEffectAnim.start()
-        clickEffectAnim.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-                mPoint = Pair(location, mPoint.second)
-            }
-
-            override fun onAnimationEnd(animation: Animator?) {
-                isLineAnimationRun = false
-            }
-
-            override fun onAnimationCancel(animation: Animator?) {
-            }
-
-            override fun onAnimationStart(animation: Animator?) {
-            }
-        })
+        val animatorSet = AnimatorSet()
+        animatorSet.start()
+        val clickEffectAnim1 = ObjectAnimator.ofFloat(
+                this, "indicatorLocationY", mIndicatorHeight, height + 10F)
+        clickEffectAnim1.duration = 150
+        val clickEffectAnim2 = ObjectAnimator.ofFloat(
+                this, "indicatorLocationX", mPoint.first, location)
+        clickEffectAnim2.duration = 0
+        val clickEffectAnim3 = ObjectAnimator.ofFloat(
+                this, "indicatorLocationY", height + 10F, mIndicatorHeight)
+        clickEffectAnim3.duration = 500
+        clickEffectAnim3.interpolator = BounceInterpolator()
+        animatorSet.playSequentially(clickEffectAnim1, clickEffectAnim2, clickEffectAnim3)
+        animatorSet.start()
     }
 
     var animationType: AnimationType
