@@ -10,16 +10,16 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
-import android.view.animation.Interpolator
-import android.view.animation.LinearInterpolator
 import androidx.core.view.iterator
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.*
+
 
 class CustomNavigationView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : BottomNavigationView(context, attrs, defStyleAttr) {
     enum class AnimationType {
-        Point, Trail
+        Point, Trail, Fall
     }
 
     private val mPaint = Paint()
@@ -29,7 +29,7 @@ class CustomNavigationView @JvmOverloads constructor(
     private lateinit var mListener: OnNavigationItemSelectedListener
     private var isListenerBound = false
     private var isLineAnimationRun = false
-    private var mIndicatorRadius = 10F
+    private var mIndicatorRadius = 6F
     private var mIndicatorColor = Color.parseColor("#03DAC5")
     private var mAnimationTye: AnimationType = AnimationType.Point
 
@@ -39,6 +39,7 @@ class CustomNavigationView @JvmOverloads constructor(
             when (mAnimationTye) {
                 AnimationType.Point -> moveIndicatorX((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.Trail -> moveIndicatorXType2((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
+                AnimationType.Fall -> moveIndicatorXType3((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
             }
             true
         }
@@ -78,14 +79,16 @@ class CustomNavigationView @JvmOverloads constructor(
         val clickEffectAnim2 = ObjectAnimator.ofFloat(
                 this, "indicatorOldLocationX", mOldPoint.first, location)
         clickEffectAnim2.duration = 150
+        clickEffectAnim2.startDelay = 100
         clickEffectAnim2.interpolator = AccelerateInterpolator()
         isLineAnimationRun = true
-        clickEffectAnim.addListener(object : Animator.AnimatorListener {
+        clickEffectAnim2.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                clickEffectAnim2.start()
+                isLineAnimationRun = false
+                mOldPoint = mPoint
             }
 
             override fun onAnimationCancel(animation: Animator?) {
@@ -94,13 +97,24 @@ class CustomNavigationView @JvmOverloads constructor(
             override fun onAnimationStart(animation: Animator?) {
             }
         })
-        clickEffectAnim2.addListener(object : Animator.AnimatorListener {
+        clickEffectAnim2.start()
+    }
+
+    private fun moveIndicatorXType3(location: Float) {
+        val clickEffectAnim = ObjectAnimator.ofFloat(
+                this, "indicatorLocationY", mPoint.second, height + 10F)
+        clickEffectAnim.duration = 150
+        clickEffectAnim.repeatCount = 1
+        clickEffectAnim.repeatMode = ValueAnimator.REVERSE
+        clickEffectAnim.interpolator = BounceInterpolator()
+        clickEffectAnim.start()
+        clickEffectAnim.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
+                mPoint = Pair(location, mPoint.second)
             }
 
             override fun onAnimationEnd(animation: Animator?) {
                 isLineAnimationRun = false
-                mOldPoint = mPoint
             }
 
             override fun onAnimationCancel(animation: Animator?) {
@@ -131,6 +145,15 @@ class CustomNavigationView @JvmOverloads constructor(
         set(location) {
             if (mOldPoint.first != location) {
                 mOldPoint = Pair(location, mOldPoint.second)
+                invalidate()
+            }
+        }
+
+    private var indicatorLocationY: Float
+        get() = mPoint.second
+        set(location) {
+            if (mPoint.second != location) {
+                mPoint = Pair(mPoint.first, location)
                 invalidate()
             }
         }
