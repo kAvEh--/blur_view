@@ -33,7 +33,7 @@ class NavigationActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView1.setupWithNavController(navController)
-        navView1.animationType = CustomNavigationView.AnimationType.Fall
+        navView1.animationType = CustomNavigationView.AnimationType.MoveUp
 //        navView1.menu.startAnimations()
 //        navView2.animationType = CustomNavigationView.AnimationType.Trail
 //        navView2.setOnNavigationItemSelectedListener { item ->
