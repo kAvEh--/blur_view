@@ -32,7 +32,7 @@ class CustomNavigationView @JvmOverloads constructor(
     private var isListenerBound = false
     private var isLineAnimationRun = false
     private var mIndicatorRadius = 6F
-    private var mBigIndicatorRadius = 56F
+    private var mBigIndicatorRadius = 65F
     private var mIndicatorColor = Color.parseColor("#03DAC5")
     private var mAnimationTye: AnimationType = AnimationType.Point
     private var mIndicatorHeight = 0F
@@ -132,14 +132,14 @@ class CustomNavigationView @JvmOverloads constructor(
         val animatorSet = AnimatorSet()
         animatorSet.start()
         val clickEffectAnim1 = ObjectAnimator.ofFloat(
-                this, "bigIndicatorLocationY", mBigIndicatorHeight, height.toFloat())
+                this, "bigIndicatorLocationY", mBigIndicatorHeight, height.toFloat() - mBigIndicatorRadius)
         clickEffectAnim1.duration = 100
         val clickEffectAnim2 = ObjectAnimator.ofFloat(
                 this, "bigIndicatorLocationX", mBigPoint.first, location)
         clickEffectAnim2.duration = 100
         val clickEffectAnim3 = ObjectAnimator.ofFloat(
-                this, "bigIndicatorLocationY", height.toFloat(), mBigIndicatorHeight)
-        clickEffectAnim3.duration = 100
+                this, "bigIndicatorLocationY", height.toFloat() - mBigIndicatorRadius, mBigIndicatorHeight)
+        clickEffectAnim3.duration = 300
         clickEffectAnim3.interpolator = BounceInterpolator()
         animatorSet.playSequentially(clickEffectAnim1, clickEffectAnim2, clickEffectAnim3)
         animatorSet.start()
@@ -218,6 +218,7 @@ class CustomNavigationView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         if (mAnimationTye == AnimationType.MoveUp) {
             canvas.drawCircle(mBigPoint.first, mBigPoint.second, mBigIndicatorRadius, mPaint)
+//            canvas.drawRect(0F, mBigIndicatorHeight, width.toFloat(), height.toFloat(), mPaint)
             return
         }
         if (isLineAnimationRun) {
