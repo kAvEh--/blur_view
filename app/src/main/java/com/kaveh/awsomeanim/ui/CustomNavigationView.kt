@@ -26,22 +26,17 @@ class CustomNavigationView @JvmOverloads constructor(
     private val mPaint = Paint()
     private val mLinePaint = Paint()
     private lateinit var mPoint: Pair<Float, Float>
+    private lateinit var mBigPoint: Pair<Float, Float>
     private lateinit var mOldPoint: Pair<Float, Float>
-    private lateinit var mP0: Pair<Float, Float>
-    private lateinit var mP1: Pair<Float, Float>
-    private lateinit var mP2: Pair<Float, Float>
-    private lateinit var mP3: Pair<Float, Float>
-    private lateinit var mP4: Pair<Float, Float>
-    private lateinit var mP5: Pair<Float, Float>
-    private lateinit var mP6: Pair<Float, Float>
     private lateinit var mListener: OnNavigationItemSelectedListener
     private var isListenerBound = false
     private var isLineAnimationRun = false
     private var mIndicatorRadius = 6F
+    private var mBigIndicatorRadius = 56F
     private var mIndicatorColor = Color.parseColor("#03DAC5")
     private var mAnimationTye: AnimationType = AnimationType.Point
     private var mIndicatorHeight = 0F
-    private var mPath = Path()
+    private var mBigIndicatorHeight = 0F
 
     init {
         this.setOnNavigationItemSelectedListener { item ->
@@ -50,7 +45,7 @@ class CustomNavigationView @JvmOverloads constructor(
                 AnimationType.Point -> moveIndicatorX((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.Trail -> moveIndicatorXType2((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.Fall -> moveIndicatorXType3((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
-                AnimationType.MoveUp -> moveIndicatorXType4(item, (2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
+                AnimationType.MoveUp -> moveIndicatorXType4((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
             }
             true
         }
@@ -70,29 +65,11 @@ class CustomNavigationView @JvmOverloads constructor(
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         mIndicatorHeight = height * .68F
+        mBigIndicatorHeight = height * .3F
         mPoint = Pair((2 * findSelectedItem(this.selectedItemId) + 1) * (width / (this.menu.size() * 2F)), mIndicatorHeight)
         mOldPoint = mPoint
         if (mAnimationTye == AnimationType.MoveUp) {
-            mP0 = Pair(2 * findSelectedItem(this.selectedItemId) * (width / (this.menu.size() * 2F)), height * .3F)
-            mP1 = Pair(mP0.first + 75F, mP0.second)
-            mP2 = Pair(mP0.first + 75F, 0F)
-            mP3 = Pair(mPoint.first, 0F)
-            mP4 = Pair(mPoint.first + 25F, 0F)
-            mP5 = Pair(mPoint.first + 25F, 0F)
-            mP6 = Pair((2 * findSelectedItem(this.selectedItemId) + 2) * (width / (this.menu.size() * 2F)), mP0.second)
-
-            mPath.reset()
-            mPath.moveTo(mP0.first, mP0.second);
-
-            mPath.cubicTo(mP1.first, mP1.second,
-                    mP2.first, mP2.second,
-                    mP3.first, mP3.second)
-
-            mPath.cubicTo(mP4.first, mP4.second,
-                    mP5.first, mP5.second,
-                    mP6.first, mP6.second)
-
-            mPath.close()
+            mBigPoint = Pair(mPoint.first, mBigIndicatorHeight)
         }
     }
 
@@ -151,26 +128,21 @@ class CustomNavigationView @JvmOverloads constructor(
         animatorSet.start()
     }
 
-    private fun moveIndicatorXType4(item: MenuItem, location: Float) {
+    private fun moveIndicatorXType4(location: Float) {
         val animatorSet = AnimatorSet()
         animatorSet.start()
         val clickEffectAnim1 = ObjectAnimator.ofFloat(
-                this, "indicatorLocationY", mIndicatorHeight, height + 10F)
-        clickEffectAnim1.duration = 150
+                this, "bigIndicatorLocationY", mBigIndicatorHeight, height.toFloat())
+        clickEffectAnim1.duration = 100
         val clickEffectAnim2 = ObjectAnimator.ofFloat(
-                this, "indicatorLocationX", mPoint.first, location)
-        clickEffectAnim2.duration = 0
+                this, "bigIndicatorLocationX", mBigPoint.first, location)
+        clickEffectAnim2.duration = 100
         val clickEffectAnim3 = ObjectAnimator.ofFloat(
-                this, "indicatorLocationY", height + 10F, mIndicatorHeight)
-        clickEffectAnim3.duration = 500
+                this, "bigIndicatorLocationY", height.toFloat(), mBigIndicatorHeight)
+        clickEffectAnim3.duration = 100
         clickEffectAnim3.interpolator = BounceInterpolator()
         animatorSet.playSequentially(clickEffectAnim1, clickEffectAnim2, clickEffectAnim3)
         animatorSet.start()
-    }
-
-    private fun moveIndicatorType5(location: Float) {
-//        mPath.moveTo(0F, height * .5F)
-//        mPath.cubicTo()
     }
 
     var animationType: AnimationType
@@ -206,6 +178,24 @@ class CustomNavigationView @JvmOverloads constructor(
             }
         }
 
+    private var bigIndicatorLocationX: Float
+        get() = mBigPoint.first
+        set(location) {
+            if (mBigPoint.first != location) {
+                mBigPoint = Pair(location, mBigPoint.second)
+                invalidate()
+            }
+        }
+
+    private var bigIndicatorLocationY: Float
+        get() = mBigPoint.second
+        set(location) {
+            if (mBigPoint.second != location) {
+                mBigPoint = Pair(mBigPoint.first, location)
+                invalidate()
+            }
+        }
+
     private fun findSelectedItem(itemId: Int): Int {
         var index = 0
         for (i in this.menu) {
@@ -226,13 +216,14 @@ class CustomNavigationView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (mAnimationTye == AnimationType.MoveUp) {
+            canvas.drawCircle(mBigPoint.first, mBigPoint.second, mBigIndicatorRadius, mPaint)
+            return
+        }
         if (isLineAnimationRun) {
             canvas.drawLine(mOldPoint.first, mOldPoint.second, mPoint.first, mPoint.second, mLinePaint)
         } else {
             canvas.drawCircle(mPoint.first, mPoint.second, mIndicatorRadius, mPaint)
-        }
-        if (mAnimationTye == AnimationType.MoveUp) {
-            canvas.drawPath(mPath, mPaint)
         }
     }
 }

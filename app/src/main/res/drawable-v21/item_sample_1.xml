@@ -15,4 +15,9 @@
         android:fromId="@id/normal"
         android:toId="@id/selected" />
 
+    <transition
+        android:drawable="@drawable/transition_2_1"
+        android:fromId="@id/selected"
+        android:toId="@id/normal" />
+
 </animated-selector>
