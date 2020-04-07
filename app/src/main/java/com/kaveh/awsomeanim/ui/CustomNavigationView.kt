@@ -14,6 +14,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
 import androidx.core.view.iterator
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.kaveh.awsomeanim.R
 
 
 class CustomNavigationView @JvmOverloads constructor(
@@ -25,6 +26,7 @@ class CustomNavigationView @JvmOverloads constructor(
 
     private val mPaint = Paint()
     private val mLinePaint = Paint()
+    private val mBigPaint = Paint()
     private lateinit var mPoint: Pair<Float, Float>
     private lateinit var mBigPoint: Pair<Float, Float>
     private lateinit var mOldPoint: Pair<Float, Float>
@@ -60,6 +62,11 @@ class CustomNavigationView @JvmOverloads constructor(
         mLinePaint.isAntiAlias = true
         mLinePaint.strokeWidth = mIndicatorRadius
         mLinePaint.color = mIndicatorColor
+        mBigPaint.style = Paint.Style.FILL
+        mBigPaint.strokeCap = Paint.Cap.ROUND
+        mBigPaint.isAntiAlias = true
+        mBigPaint.color = mIndicatorColor
+        mBigPaint.setShadowLayer(mBigIndicatorRadius + 5F, 0.0f, 0.0f, R.color.black)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -217,7 +224,7 @@ class CustomNavigationView @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         if (mAnimationTye == AnimationType.MoveUp) {
-            canvas.drawCircle(mBigPoint.first, mBigPoint.second, mBigIndicatorRadius, mPaint)
+            canvas.drawCircle(mBigPoint.first, mBigPoint.second, mBigIndicatorRadius, mBigPaint)
 //            canvas.drawRect(0F, mBigIndicatorHeight, width.toFloat(), height.toFloat(), mPaint)
             return
         }
