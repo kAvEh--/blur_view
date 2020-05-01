@@ -7,15 +7,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.util.AttributeSet
-import android.view.MenuItem
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
 import androidx.core.view.iterator
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kaveh.awsomeanim.R
-
 
 class CustomNavigationView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

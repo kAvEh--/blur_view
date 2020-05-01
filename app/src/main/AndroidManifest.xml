@@ -10,9 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".NightModeActivity"
+            android:label="@string/title_activity_night_mode"
+            android:configChanges="colorMode|uiMode"
+            android:theme="@style/AppTheme"/>
+        <activity
             android:name=".ArcProgressActivity"
             android:label="@string/title_activity_arc_progress"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".WaveActivity"
             android:label="@string/title_activity_wave"

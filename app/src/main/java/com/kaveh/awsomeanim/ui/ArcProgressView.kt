@@ -144,7 +144,7 @@ class ArcProgressView @JvmOverloads constructor(
         mPaintBg.strokeCap = Paint.Cap.ROUND
         mPaintBg.isAntiAlias = true
         mPaintBg.color = mBackgroundColor
-        mPaintBg.setShadowLayer(10.0f, 0.0f, -8.0f, R.color.colorPrimaryDark)
+        mPaintBg.setShadowLayer(10.0f, 0.0f, -8.0f, R.color.colorPrimary)
         mPaintProgress.style = Paint.Style.STROKE
         mPaintProgress.strokeWidth = 15.0F
         mPaintProgress.strokeCap = Paint.Cap.ROUND
