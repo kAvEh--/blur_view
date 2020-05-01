@@ -35,18 +35,5 @@ class NavigationActivity : AppCompatActivity() {
         } else if (type == "fall") {
             navView1.animationType = CustomNavigationView.AnimationType.Fall
         }
-//        navView1.menu.startAnimations()
-//        navView2.animationType = CustomNavigationView.AnimationType.Trail
-//        navView2.setOnNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//            }
-//            true
-//        }
-    }
-
-    private fun Menu.startAnimations() {
-        (0 until size()).map { get(it).icon }
-                .filterIsInstance<Animatable2>()
-                .forEach { it.start() }
     }
 }
