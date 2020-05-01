@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val taskDescription = TaskDescription("sdfasfd", R.drawable.ic_notifications_black_24dp, resources.getColor(R.color.colorAccent))
-        (this as Activity).setTaskDescription(taskDescription)
+//        val taskDescription = TaskDescription("sdfasfd", R.drawable.ic_notifications_black_24dp, resources.getColor(R.color.colorAccent))
+//        (this as Activity).setTaskDescription(taskDescription)
 
         val darkButton = findViewById<Button>(R.id.dark_button)
         darkButton.setOnClickListener {

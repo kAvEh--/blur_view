@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize">
 
+    <ImageView
+        android:id="@+id/main_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:contentDescription="@string/app_name" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -27,6 +34,7 @@
         android:layout_marginEnd="0dp"
         android:background="@android:color/white"
         app:itemBackground="@color/transparent"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

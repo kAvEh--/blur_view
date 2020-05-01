@@ -21,6 +21,7 @@ class CustomNavigationView @JvmOverloads constructor(
         Point, Trail, Fall, MoveUp
     }
 
+    private var isListenerReady = false
     private val mPaint = Paint()
     private val mLinePaint = Paint()
     private val mBigPaint = Paint()
@@ -28,6 +29,7 @@ class CustomNavigationView @JvmOverloads constructor(
     private lateinit var mBigPoint: Pair<Float, Float>
     private lateinit var mOldPoint: Pair<Float, Float>
     private lateinit var mListener: OnNavigationItemSelectedListener
+    private lateinit var customListener: OnNavigationItemSelectedListener
     private var isListenerBound = false
     private var isLineAnimationRun = false
     private var mIndicatorRadius = 6F
@@ -40,12 +42,16 @@ class CustomNavigationView @JvmOverloads constructor(
     init {
         this.setOnNavigationItemSelectedListener { item ->
             if (::mListener.isInitialized) mListener.onNavigationItemSelected(item)
+            if (isListenerReady && ::customListener.isInitialized) {
+                customListener.onNavigationItemSelected(item)
+            }
             when (mAnimationTye) {
                 AnimationType.Point -> moveIndicatorX((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.Trail -> moveIndicatorXType2((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.Fall -> moveIndicatorXType3((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.MoveUp -> moveIndicatorXType4((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
             }
+
             true
         }
         isListenerBound = true
@@ -209,6 +215,13 @@ class CustomNavigationView @JvmOverloads constructor(
             index++
         }
         return 0
+    }
+
+    fun setCustomNavigationListener(listener: OnNavigationItemSelectedListener?) {
+        if (listener != null) {
+            customListener = listener
+            isListenerReady = true
+        }
     }
 
     override fun setOnNavigationItemSelectedListener(listener: OnNavigationItemSelectedListener?) {

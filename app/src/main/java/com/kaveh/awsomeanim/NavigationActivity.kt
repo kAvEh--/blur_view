@@ -1,18 +1,13 @@
 package com.kaveh.awsomeanim
 
-import android.graphics.drawable.Animatable2
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.os.Bundle
-import android.view.Menu
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.fragment.app.FragmentContainerView
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kaveh.awsomeanim.ui.CustomNavigationView
 
 class NavigationActivity : AppCompatActivity() {
@@ -27,13 +22,47 @@ class NavigationActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
+        val mImageView = findViewById<ImageView>(R.id.main_bg)
+        var colorFrom = resources.getColor(R.color.color1)
+        val listener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            var colorTo = resources.getColor(R.color.color2)
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    colorTo = resources.getColor(R.color.color1)
+                }
+                R.id.navigation_dashboard -> {
+                    colorTo = resources.getColor(R.color.color2)
+                }
+                R.id.navigation_notifications -> {
+                    colorTo = resources.getColor(R.color.color3)
+                }
+            }
+            val fromTmp = colorFrom
+            val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), fromTmp, colorTo)
+            colorAnimation.duration = 250 // milliseconds
+
+            colorAnimation.addUpdateListener { animator ->
+                run {
+                    mImageView.setBackgroundColor(animator.animatedValue as Int)
+                    colorFrom = animator.animatedValue as Int
+                }
+            }
+            colorAnimation.start()
+            return@OnNavigationItemSelectedListener true
+        }
+        navView1.setCustomNavigationListener(listener)
+
         navView1.setupWithNavController(navController)
-        if (type == "trail") {
-            navView1.animationType = CustomNavigationView.AnimationType.Trail
-        } else if (type == "point") {
-            navView1.animationType = CustomNavigationView.AnimationType.Point
-        } else if (type == "fall") {
-            navView1.animationType = CustomNavigationView.AnimationType.Fall
+        when (type) {
+            "trail" -> {
+                navView1.animationType = CustomNavigationView.AnimationType.Trail
+            }
+            "point" -> {
+                navView1.animationType = CustomNavigationView.AnimationType.Point
+            }
+            "fall" -> {
+                navView1.animationType = CustomNavigationView.AnimationType.Fall
+            }
         }
     }
 }
