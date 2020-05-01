@@ -29,18 +29,21 @@ class MainActivity : AppCompatActivity() {
         val navButton = findViewById<Button>(R.id.nav_button_1)
         navButton.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
+            intent.putExtra("type", "trail")
             startActivity(intent)
         }
 
         val navButton2 = findViewById<Button>(R.id.nav_button_2)
-        navButton.setOnClickListener {
+        navButton2.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
+            intent.putExtra("type", "point")
             startActivity(intent)
         }
 
         val navButton3 = findViewById<Button>(R.id.nav_button_3)
-        navButton.setOnClickListener {
+        navButton3.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
+            intent.putExtra("type", "fall")
             startActivity(intent)
         }
 

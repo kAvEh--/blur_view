@@ -22,11 +22,19 @@ class NavigationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_navigation)
         val navView1: CustomNavigationView = findViewById(R.id.nav_view1)
 
+        val type = intent.getStringExtra("type")
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
         navView1.setupWithNavController(navController)
-        navView1.animationType = CustomNavigationView.AnimationType.Trail
+        if (type == "trail") {
+            navView1.animationType = CustomNavigationView.AnimationType.Trail
+        } else if (type == "point") {
+            navView1.animationType = CustomNavigationView.AnimationType.Point
+        } else if (type == "fall") {
+            navView1.animationType = CustomNavigationView.AnimationType.Fall
+        }
 //        navView1.menu.startAnimations()
 //        navView2.animationType = CustomNavigationView.AnimationType.Trail
 //        navView2.setOnNavigationItemSelectedListener { item ->
