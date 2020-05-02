@@ -7,18 +7,6 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/dark_button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:enabled="true"
-        android:text="Dark/Light Mode"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/nav_button_1"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
@@ -29,7 +17,7 @@
         android:text="Nav 1"
         app:layout_constraintEnd_toStartOf="@id/nav_button_2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dark_button" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/nav_button_2"
@@ -42,7 +30,7 @@
         android:text="Nav 2"
         app:layout_constraintEnd_toStartOf="@id/nav_button_3"
         app:layout_constraintStart_toEndOf="@id/nav_button_1"
-        app:layout_constraintTop_toBottomOf="@id/dark_button" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/nav_button_3"
@@ -56,7 +44,21 @@
         android:text="Nav 3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/nav_button_2"
-        app:layout_constraintTop_toBottomOf="@id/dark_button" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/nav_button_4"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="24dp"
+        android:enabled="true"
+        android:text="Nav 4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/nav_button_2"
+        app:layout_constraintTop_toBottomOf="@id/nav_button_1" />
 
     <Button
         android:id="@+id/wave_button"
@@ -64,11 +66,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:background="@color/color1"
         android:enabled="true"
         android:text="Wave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nav_button_1" />
+        app:layout_constraintTop_toBottomOf="@id/nav_button_4" />
 
     <Button
         android:id="@+id/arc_progress_button"

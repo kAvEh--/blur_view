@@ -14,10 +14,16 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_navigation)
-        val navView1: CustomNavigationView = findViewById(R.id.nav_view1)
 
         val type = intent.getStringExtra("type")
+
+        if (type == "moveup") {
+            setContentView(R.layout.activity_navigation_2)
+        } else {
+            setContentView(R.layout.activity_navigation)
+        }
+
+        val navView1: CustomNavigationView = findViewById(R.id.nav_view1)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController

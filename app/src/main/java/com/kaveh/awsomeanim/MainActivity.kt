@@ -20,11 +20,11 @@ class MainActivity : AppCompatActivity() {
 //        val taskDescription = TaskDescription("sdfasfd", R.drawable.ic_notifications_black_24dp, resources.getColor(R.color.colorAccent))
 //        (this as Activity).setTaskDescription(taskDescription)
 
-        val darkButton = findViewById<Button>(R.id.dark_button)
-        darkButton.setOnClickListener {
-            val intent = Intent(this, NightModeActivity::class.java)
-            startActivity(intent)
-        }
+//        val darkButton = findViewById<Button>(R.id.dark_button)
+//        darkButton.setOnClickListener {
+//            val intent = Intent(this, NightModeActivity::class.java)
+//            startActivity(intent)
+//        }
 
         val navButton = findViewById<Button>(R.id.nav_button_1)
         navButton.setOnClickListener {
@@ -44,6 +44,13 @@ class MainActivity : AppCompatActivity() {
         navButton3.setOnClickListener {
             val intent = Intent(this, NavigationActivity::class.java)
             intent.putExtra("type", "fall")
+            startActivity(intent)
+        }
+
+        val navButton4 = findViewById<Button>(R.id.nav_button_4)
+        navButton4.setOnClickListener {
+            val intent = Intent(this, NavigationActivity::class.java)
+            intent.putExtra("type", "moveup")
             startActivity(intent)
         }
 
