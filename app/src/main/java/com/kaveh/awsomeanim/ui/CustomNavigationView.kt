@@ -49,7 +49,7 @@ class CustomNavigationView @JvmOverloads constructor(
                 AnimationType.Point -> moveIndicatorX((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.Trail -> moveIndicatorXType2((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
                 AnimationType.Fall -> moveIndicatorXType3((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
-                AnimationType.MoveUp -> moveIndicatorXType4((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
+//                AnimationType.MoveUp -> moveIndicatorXType4((2 * findSelectedItem(item.itemId) + 1) * (width / (this.menu.size() * 2F)))
             }
 
             true
@@ -233,15 +233,12 @@ class CustomNavigationView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (mAnimationTye == AnimationType.MoveUp) {
-            canvas.drawCircle(mBigPoint.first, mBigPoint.second, mBigIndicatorRadius, mBigPaint)
-//            canvas.drawRect(0F, mBigIndicatorHeight, width.toFloat(), height.toFloat(), mPaint)
-            return
-        }
-        if (isLineAnimationRun) {
-            canvas.drawLine(mOldPoint.first, mOldPoint.second, mPoint.first, mPoint.second, mLinePaint)
-        } else {
-            canvas.drawCircle(mPoint.first, mPoint.second, mIndicatorRadius, mPaint)
+        if (mAnimationTye != AnimationType.MoveUp) {
+            if (isLineAnimationRun) {
+                canvas.drawLine(mOldPoint.first, mOldPoint.second, mPoint.first, mPoint.second, mLinePaint)
+            } else {
+                canvas.drawCircle(mPoint.first, mPoint.second, mIndicatorRadius, mPaint)
+            }
         }
     }
 }

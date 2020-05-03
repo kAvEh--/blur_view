@@ -69,6 +69,9 @@ class NavigationActivity : AppCompatActivity() {
             "fall" -> {
                 navView1.animationType = CustomNavigationView.AnimationType.Fall
             }
+            "moveup" -> {
+                navView1.animationType = CustomNavigationView.AnimationType.MoveUp
+            }
         }
     }
 }
