@@ -1,7 +1,5 @@
 package com.kaveh.awsomeanim
 
-import android.app.Activity
-import android.app.ActivityManager.TaskDescription
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -62,6 +60,11 @@ class MainActivity : AppCompatActivity() {
         val arcButton = findViewById<Button>(R.id.arc_progress_button)
         arcButton.setOnClickListener {
             val intent = Intent(this, ArcProgressActivity::class.java)
+            startActivity(intent)
+        }
+        val blurButton = findViewById<Button>(R.id.blur_button)
+        blurButton.setOnClickListener {
+            val intent = Intent(this, BlurActivity::class.java)
             startActivity(intent)
         }
     }

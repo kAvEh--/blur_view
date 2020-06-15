@@ -3,8 +3,6 @@ package com.kaveh.awsomeanim
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.annotation.RequiresApi
@@ -13,7 +11,6 @@ import androidx.core.graphics.ColorUtils
 import com.kaveh.awsomeanim.ui.WaveView
 import com.larswerkman.holocolorpicker.ColorPicker
 import com.larswerkman.holocolorpicker.OpacityBar
-import kotlinx.android.synthetic.main.activity_navigation.*
 
 
 class WaveActivity : AppCompatActivity() {

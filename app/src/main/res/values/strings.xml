@@ -15,4 +15,5 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_arc_progress">ArcProgressActivity</string>
     <string name="title_activity_night_mode">NightModeActivity</string>
+    <string name="title_activity_blur">BlurActivity</string>
 </resources>
