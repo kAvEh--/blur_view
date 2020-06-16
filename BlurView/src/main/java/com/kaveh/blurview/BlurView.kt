@@ -35,7 +35,7 @@ class BlurView @JvmOverloads constructor(
     var blurRadius: Float
         get() = radius
         set(value) {
-            if (value > 0 && value < 100)
+            if (value > 0 && value < 25)
                 radius = value
         }
 
@@ -53,6 +53,4 @@ class BlurView @JvmOverloads constructor(
         rs.destroy()
         return output
     }
-
-
 }
