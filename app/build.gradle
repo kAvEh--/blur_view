@@ -6,7 +6,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "com.kaveh.awsomeanim"
+        applicationId "com.kaveh.blurview"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

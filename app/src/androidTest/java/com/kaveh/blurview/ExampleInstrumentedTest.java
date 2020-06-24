@@ -1,4 +1,4 @@
-package com.kaveh.awsomeanim;
+package com.kaveh.blurview;
 
 import android.content.Context;
 

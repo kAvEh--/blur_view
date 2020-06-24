@@ -1,4 +1,4 @@
-package com.kaveh.awsomeanim
+package com.kaveh.blurview
 
 import android.os.Bundle
 import android.view.View
@@ -6,10 +6,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.kaveh.blurview.BlurView
-import com.kaveh.blurview.BlurViewGroup
-import com.kaveh.blurview.BlurViewGroup.Companion.blur
 
 class BlurActivity : AppCompatActivity() {
 
