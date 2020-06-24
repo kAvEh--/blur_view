@@ -4,6 +4,7 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -12,24 +13,7 @@
         <activity
             android:name=".BlurActivity"
             android:label="@string/title_activity_blur"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".NightModeActivity"
-            android:configChanges="colorMode|uiMode"
-            android:label="@string/title_activity_night_mode"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ArcProgressActivity"
-            android:label="@string/title_activity_arc_progress"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".WaveActivity"
-            android:label="@string/title_activity_wave"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".NavigationActivity"
-            android:label="@string/title_activity_navigation" />
-        <activity android:name=".MainActivity">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

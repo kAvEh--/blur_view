@@ -1,19 +1,4 @@
 <resources>
-    <string name="app_name">Awesome Animation</string>
-    <string name="title_activity_navigation">NavigationActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="title_activity_wave">WaveActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="title_activity_arc_progress">ArcProgressActivity</string>
-    <string name="title_activity_night_mode">NightModeActivity</string>
+    <string name="app_name">Blur View</string>
     <string name="title_activity_blur">BlurActivity</string>
 </resources>
