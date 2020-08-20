@@ -2,7 +2,7 @@
 
 A simple library for blur and unblur Views/Images for Android.
 
-# Usage
+## Usage
 
 1. Add it in your root build.gradle at the end of repositories:
 ```groovy
@@ -50,14 +50,13 @@ dependencies {
     viewGroup.remove()
 ```
 
-# Requirements
+## Requirements
 Android 4.4+ (API 19)
 
-# Developed By
--------
+## Developed By
 * Kaveh Fazaeli - <kaveh.fazaeli@gmail.com>
 
-# License
+## License
 
     Copyright 2020 kAvEh--
 
