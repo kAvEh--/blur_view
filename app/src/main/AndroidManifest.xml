@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.kaveh.blurview">
+    package="com.kaveh.blurviewDemo">
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.kaveh.blurview.BlurActivity"
+            android:name="com.kaveh.blurviewDemo.BlurActivity"
             android:label="@string/title_activity_blur"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

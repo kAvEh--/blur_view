@@ -1,4 +1,4 @@
-package com.kaveh.blurview
+package com.kaveh.blurviewDemo
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import com.kaveh.blurview.BlurView
+import com.kaveh.blurview.BlurViewGroup
 
 class BlurActivity : AppCompatActivity() {
 

@@ -1,3 +1,3 @@
 include ':blurview'
-rootProject.name='Awesome Animation'
+rootProject.name='Blur View'
 include ':app'
