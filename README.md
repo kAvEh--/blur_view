@@ -30,7 +30,7 @@ dependencies {
 ```
 2. Set the BlurRadius of image (Must be Float between 0-25)
 ```kotlin
-    findViewById<BlurView>(R.id.blurView).blurRadius = progress / 4F
+    findViewById<BlurView>(R.id.blurView).blurRadius = 15F
     findViewById<BlurView>(R.id.blurView).blur()
 ```
 3. For unblurring the image just set the radius to zero
